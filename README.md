@@ -7,6 +7,7 @@ Body->row->Json
 {
   "customerOrderNo": "1"
 }
+
 2)Siparis Durum Güncelleme
 
 http://localhost:5245/Orders/SetOrderState [POST]
