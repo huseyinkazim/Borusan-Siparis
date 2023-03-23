@@ -1,8 +1,14 @@
 using AutoMapper;
 using Borusan.Api.Extensions;
 using Borusan.Api.Middleware;
+using Borusan.Data;
+using Borusan.Interface;
+using Borusan.Repository;
+using Borusan.Repository.Database;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -16,30 +22,12 @@ builder.Services.AddControllers()
 	.AddFluentValidation();
 #endregion
 #region dbcontext 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//{
-//	options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString"));
-//});
-#endregion
-#region jwt token service
-builder.Services.AddAuthentication(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-		   .AddJwtBearer(options =>
-		   {
-			   options.TokenValidationParameters = new TokenValidationParameters
-			   {
-				   ValidateIssuerSigningKey = true,
-				   IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Keys:UserAuthSecretKey"])),
-				   ValidIssuer = builder.Configuration["Keys:Issue"],
-				   ValidAudience = builder.Configuration["Keys:Audience"],
-				   ValidateLifetime = true
-			   };
-		   });
+	options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString"));
+});
 #endregion
+
 #region logger service
 //var logger = new LoggerConfiguration()
 //  .WriteTo.MongoDB("databaseUrl")
@@ -64,6 +52,12 @@ builder.Services.AddSingleton(mapper);
 
 #region dependencies
 builder.Services.AddTransient<MyExceptionMiddleware>();
+builder.Services.AddScoped<IValidator<MaterialDTO>, MaterialValidator>();
+builder.Services.AddScoped<IValidator<OrderDTO>, OrderValidator>();
+
+builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
 var app = builder.Build();
 
@@ -74,9 +68,9 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 app.UseExceptionMiddleware();
-
-app.UseAuthentication();
-app.UseAuthorization();
+DataSeed.Initialize(app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
+//app.UseAuthentication();
+//app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
