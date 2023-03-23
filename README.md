@@ -3,6 +3,7 @@
 1)Siparis Durum Sorgulama
 
 http://localhost:5245/Orders/GetOrderState [GET]
+
 Body->row->Json
 {
   "customerOrderNo": "1"
@@ -11,7 +12,9 @@ Body->row->Json
 2)Siparis Durum Güncelleme
 
 http://localhost:5245/Orders/SetOrderState [POST]
+
 Body->row->Json
+
 {
   "customerOrderNo": "1",
   "status": 1,
@@ -19,8 +22,11 @@ Body->row->Json
 }
 
 3)Sipariş Listesi Ekleme
+
 http://localhost:5245/Orders/PostOrder [POST]
+
 Body->row->Json
+
 [
   {
     "customerOrderNo": "2",
