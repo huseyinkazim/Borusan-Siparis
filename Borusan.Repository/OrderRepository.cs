@@ -37,5 +37,10 @@ namespace Borusan.Repository
 		{
 			_dbContext.Orders.Update(order);
 		}
+		public List<Order> GetAllOrders()
+		{
+			return _dbContext.Orders.ToList();
+		}
+		
 	}
 }

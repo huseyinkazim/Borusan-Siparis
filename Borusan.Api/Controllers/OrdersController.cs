@@ -55,7 +55,7 @@ namespace Borusan.Api.Controllers
 			_orderHandler.AddOrders(willAddOrders);
 			_orderHandler.Commit();
 
-			var resultList = willAddOrders.Select(i => new OrderResult { Statu = true, MusteriSiparisNo = i.CustomerOrderNo}).ToList();
+			var resultList = willAddOrders.Select(i => new OrderResult { Statu = true, MusteriSiparisNo = i.CustomerOrderNo }).ToList();
 			resultList.AddRange(errorOrders);
 
 			return resultList;
@@ -64,6 +64,7 @@ namespace Borusan.Api.Controllers
 		[HttpPost]
 		public ServiceResponse<OrderStatusModel> SetOrderState([FromBody] OrderStatusModel orderDto)
 		{
+			
 			if (string.IsNullOrEmpty(orderDto.CustomerOrderNo) || orderDto.ChangeDate == default(DateTime) || orderDto.Status == null)
 				return new ServiceResponse<OrderStatusModel>("Order model state not true.");
 
@@ -85,6 +86,10 @@ namespace Borusan.Api.Controllers
 			return new ServiceResponse<OrderStatusModel>(_orderHandler.GetOrderState(orderDto));
 
 		}
-
+		[HttpGet]
+		public List<OrderDTO> GetAllOrders()
+		{
+			return _orderHandler.GetAllOrders();
+		}
 	}
 }

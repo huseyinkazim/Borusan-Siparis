@@ -10,5 +10,6 @@ namespace Borusan.Interface
 		Order? GetOrderWithMaterialByCustomerOrderNo(Order order);
 		bool AnyOrder(Order order);
 		bool AnyOrderWithCustomerCode(Order order);
+		List<Order> GetAllOrders();
 	}
 }

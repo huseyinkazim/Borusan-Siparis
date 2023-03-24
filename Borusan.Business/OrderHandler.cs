@@ -74,6 +74,16 @@ namespace Borusan.Business
 			return null;
 
 		}
+		public List<OrderDTO> GetAllOrders()
+		{
+			var list = _unitOfWork.Orders.GetAllOrders();
+			if (list == null || list.Count == 0)
+				return null;
+			var listDTO = _mapper.Map<List<OrderDTO>>(list);
+
+			return listDTO;
+
+		}
 
 		public int Commit()
 		{

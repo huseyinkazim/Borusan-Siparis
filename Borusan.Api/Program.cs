@@ -59,6 +59,15 @@ builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
+
+builder.Services.AddCors(opt => opt.AddPolicy("allow", builder =>
+{
+	builder.AllowAnyOrigin();
+	builder.AllowAnyMethod();
+	builder.AllowAnyHeader();
+
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -68,6 +77,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 app.UseExceptionMiddleware();
+app.UseCors("allow");
 DataSeed.Initialize(app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
 //app.UseAuthentication();
 //app.UseAuthorization();
