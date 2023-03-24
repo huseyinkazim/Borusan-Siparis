@@ -30,11 +30,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 #region logger service
 //var logger = new LoggerConfiguration()
-//  .WriteTo.MongoDB("databaseUrl")
+//  .WriteTo.MongoDB("", "log")
 //  .CreateLogger();
 
-builder.Logging.ClearProviders();
-//builder.Logging.AddSerilog(logger);
+builder.Host.UseSerilog((ctx,config)=>config.ReadFrom.Configuration(ctx.Configuration));
 #endregion
 #region swagger 
 builder.Services.AddEndpointsApiExplorer();
