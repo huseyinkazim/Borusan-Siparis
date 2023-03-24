@@ -57,3 +57,7 @@ Body->row->Json
     "changeDate": "2023-03-23T22:32:12.204Z"
   }
 ]
+
+4)Tüm Siparişleri Getirme
+
+http://localhost:5245/Orders/GetAllOrders [GET]
